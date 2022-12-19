@@ -1,5 +1,7 @@
 package az.hibernate.repeat.entity;
 
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -39,6 +41,10 @@ public class User {
     private String lastname;
     @Enumerated(STRING)
     private Role role;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {PERSIST, REMOVE})
     private Company company;
+
+    public void addCompany(Company company) {
+        this.company = company;
+    }
 }
