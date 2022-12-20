@@ -1,7 +1,5 @@
 package az.hibernate.repeat.entity;
 
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -12,28 +10,20 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
 @Data
-@EqualsAndHashCode(exclude = "company")
-@ToString(exclude = "company")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
@@ -41,10 +31,17 @@ public class User {
     private String lastname;
     @Enumerated(STRING)
     private Role role;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {PERSIST, REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    public void addCompany(Company company) {
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private Profile profile;
+
+    public void deleteProfile(Profile profile) {
+        this.profile = null;
+    }
+
+    public void setCompany(Company company) {
         this.company = company;
     }
 }

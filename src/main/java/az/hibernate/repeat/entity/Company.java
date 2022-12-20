@@ -34,9 +34,9 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = ALL)
     private Set<User> users = new HashSet<>();
 
+    //
     public void addUser(User user) {
         users.add(user);
         user.setCompany(this);
     }
-
 }

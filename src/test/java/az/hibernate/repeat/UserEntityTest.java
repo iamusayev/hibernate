@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import az.hibernate.repeat.entity.Company;
+import az.hibernate.repeat.entity.Profile;
 import az.hibernate.repeat.entity.User;
 import az.hibernate.repeat.model.Role;
 import az.hibernate.repeat.util.HibernateUtil;
@@ -89,7 +90,7 @@ class UserEntityTest {
                 .lastname("Wick")
                 .role(Role.USER)
                 .build();
-        user.addCompany(company);
+        user.setCompany(company);
         session.persist(user);
 
         session.clear();
@@ -125,4 +126,24 @@ class UserEntityTest {
 
         session.getTransaction().rollback();
     }
+
+    @Test
+    void orphanRemoval() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+
+        User user = session.find(User.class, 52);
+        user.deleteProfile(user.getProfile());
+        session.flush();
+        session.clear();
+
+        User userAfterProfileDelete = session.find(User.class, 52);
+        Profile deletedProfile = userAfterProfileDelete.getProfile();
+
+        assertThat(deletedProfile).isNull();
+
+        session.getTransaction().rollback();
+    }
+
 }
