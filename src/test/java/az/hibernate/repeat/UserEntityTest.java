@@ -132,7 +132,6 @@ class UserEntityTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-
         User user = session.find(User.class, 52);
         user.deleteProfile(user.getProfile());
         session.flush();
@@ -145,5 +144,4 @@ class UserEntityTest {
 
         session.getTransaction().rollback();
     }
-
 }

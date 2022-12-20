@@ -69,7 +69,7 @@ class CompanyTest {
         Company company = Company.builder()
                 .name("Google")
                 .build();
-        company.addUser(new User(null, "John", "Wick", Role.USER, null,null));
+        company.addUser(new User(null, "John", "Wick", Role.USER, null, null));
         session.persist(company);
 
         session.getTransaction().commit();
