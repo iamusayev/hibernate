@@ -118,7 +118,6 @@ class UserEntityTest {
         User user = session.find(User.class, 55);
         assertThat(user).isNotNull();
 
-
         session.getTransaction().commit();
     }
 }
