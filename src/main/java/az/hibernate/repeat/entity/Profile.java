@@ -1,13 +1,13 @@
 package az.hibernate.repeat.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,26 +16,27 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(exclude = "users")
-@ToString(exclude = "users")
+@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = "user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-
-public class Company {
+public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String name;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public void addUser(User user) {
-        users.add(user);
-        user.setCompany(this);
+    private String street;
+    private String language;
+
+    public void setUser(User user) {
+        user.setProfile(this);
+        this.user = user;
     }
 }

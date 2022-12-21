@@ -1,14 +1,16 @@
 package az.hibernate.repeat.entity;
 
-import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import az.hibernate.repeat.model.Role;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,19 +36,11 @@ public class User {
     private Integer id;
     private String firstname;
     private String lastname;
-    @Enumerated(STRING)
+    @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
     private Company company;
-
-    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = LAZY, cascade = CascadeType.PERSIST)
     private Profile profile;
-
-    public void deleteProfile(Profile profile) {
-        this.profile = null;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
 }
