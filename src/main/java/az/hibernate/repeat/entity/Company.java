@@ -2,6 +2,7 @@ package az.hibernate.repeat.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Data
 @EqualsAndHashCode(exclude = "users")
@@ -31,7 +34,8 @@ public class Company {
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<User> users = new ArrayList<>();
 
     public void addUser(User user) {
