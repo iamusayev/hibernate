@@ -31,7 +31,8 @@ public class UserDaoCriteriaApi {
         CriteriaQuery<User> criteria = cb.createQuery(User.class);
         Root<User> user = criteria.from(User.class);
 
-        return session.createQuery(criteria).list();
+        return session.createQuery(criteria)
+                .list();
     }
 
     //2) * Returns all employees with the given name
@@ -39,11 +40,13 @@ public class UserDaoCriteriaApi {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<User> criteria = cb.createQuery(User.class);
         Root<User> user = criteria.from(User.class);
+        Join<User, Company> company = user.join(User_.company);
 
         criteria.select(user)
                 .where(cb.equal(user.get(User_.personalInfo).get(PersonalInfo_.firstname), firstName));
 
-        return session.createQuery(criteria).list();
+        return session.createQuery(criteria)
+                .list();
     }
 
     //3) * Returns the first {limit} employees sorted by date of birth (in ascending order)
@@ -63,7 +66,10 @@ public class UserDaoCriteriaApi {
         CriteriaQuery<User> criteria = cb.createQuery(User.class);
         Root<User> user = criteria.from(User.class);
         Join<User, Company> company = user.join(User_.company);
-        criteria.select(user).where(cb.equal(company.get(Company_.name), companyName));
+
+        criteria.select(user)
+                .where(cb.equal(company.get(Company_.name), companyName));
+
 
         return session.createQuery(criteria)
                 .list();
@@ -79,10 +85,8 @@ public class UserDaoCriteriaApi {
         Join<User, Company> company = user.join(User_.company);
 
         criteria.select(payment)
-                .where(cb.equal(company.get(Company_.name), company))
                 .orderBy(cb.asc(user.get(User_.personalInfo).get(PersonalInfo_.firstname)),
-                        cb.asc(payment.get(Payment_.amount)));
-
+                        cb.asc(user.get(User_.personalInfo).get(PersonalInfo_.lastname)));
         return session.createQuery(criteria)
                 .list();
     }
@@ -97,8 +101,7 @@ public class UserDaoCriteriaApi {
 
         criteria.select(cb.avg(payment.get(Payment_.amount)))
                 .where(cb.equal(user.get(User_.personalInfo).get(PersonalInfo_.firstname), firstName),
-                        cb.equal(user.get(User_.personalInfo).get(PersonalInfo_.lastname), lastName)
-                );
+                        cb.equal(user.get(User_.personalInfo).get(PersonalInfo_.lastname), lastName));
 
         return session.createQuery(criteria)
                 .uniqueResult();
@@ -111,6 +114,7 @@ public class UserDaoCriteriaApi {
         Root<Payment> payment = criteria.from(Payment.class);
         Join<Payment, User> user = payment.join(Payment_.receiver);
         Join<User, Company> company = user.join(User_.company);
+
 
         criteria.multiselect(company.get(Company_.name), cb.avg(payment.get(Payment_.amount)))
                 .groupBy(company.get(Company_.name))
@@ -128,14 +132,13 @@ public class UserDaoCriteriaApi {
         Join<User, Company> company = user.join(User_.company);
 
         criteria.select(cb.construct(CompanyDto.class,
-                        company.get(Company_.name),
-                        cb.avg(payment.get(Payment_.amount))))
+                        cb.avg(payment.get(Payment_.amount))
+                ))
                 .groupBy(company.get(Company_.name))
                 .orderBy(cb.asc(company.get(Company_.name)));
 
-
-        return session.createQuery(criteria).list();
-
+        return session.createQuery(criteria)
+                .list();
     }
 
     //8) * Returns a list: employee (User object), average pay, but only for those employees whose average pay is greater than the average of all employees.
@@ -152,7 +155,8 @@ public class UserDaoCriteriaApi {
         criteria.select(cb.tuple(user, cb.avg(payment.get(Payment_.amount))))
                 .groupBy(user.get(User_.id))
                 .having(cb.ge(cb.avg(payment.get(Payment_.amount)),
-                        subquery.select(cb.avg(paymentSubquery.get(Payment_.amount)))))
+                        subquery.select(cb.avg(paymentSubquery.get(Payment_.amount)))
+                ))
                 .orderBy(cb.asc(user.get(User_.personalInfo).get(PersonalInfo_.firstname)));
 
         return session.createQuery(criteria)
