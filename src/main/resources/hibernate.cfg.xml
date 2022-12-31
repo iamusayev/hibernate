@@ -15,5 +15,7 @@
         <property name="format_sql">true</property>
         <mapping class="az.hibernate.repeat.entity.User"/>
         <mapping class="az.hibernate.repeat.entity.Company"/>
+        <mapping class="az.hibernate.repeat.entity.Profile"/>
+        <mapping class="az.hibernate.repeat.entity.Payment"/>
     </session-factory>
 </hibernate-configuration>

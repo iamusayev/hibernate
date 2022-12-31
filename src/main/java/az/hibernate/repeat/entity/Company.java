@@ -1,10 +1,10 @@
 package az.hibernate.repeat.entity;
 
-import static javax.persistence.CascadeType.ALL;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +15,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Data
 @EqualsAndHashCode(exclude = "users")
@@ -23,6 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @Entity
+
 public class Company {
 
     @Id
@@ -31,12 +34,12 @@ public class Company {
     private String name;
 
     @Builder.Default
-    @OneToMany(mappedBy = "company", cascade = ALL)
-    private Set<User> users = new HashSet<>();
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<User> users = new ArrayList<>();
 
     public void addUser(User user) {
         users.add(user);
         user.setCompany(this);
     }
-
 }
