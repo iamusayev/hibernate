@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,10 +22,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 @Data
-@EqualsAndHashCode(exclude = {"company", "profile", "payments"})
-@ToString(exclude = {"company", "profile", "payments"})
+@EqualsAndHashCode(exclude = {"company", "payments"})
+@ToString(exclude = {"company", "payments"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -40,14 +40,16 @@ public class User {
     private String username;
     private String info;
     private PersonalInfo personalInfo;
+
     @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "company_id")
     private Company company;
-    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = LAZY, cascade = CascadeType.PERSIST)
-    private Profile profile;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @Builder.Default
     @OneToMany(mappedBy = "receiver")
+    @BatchSize(size = 3)
     private List<Payment> payments = new ArrayList<>();
 }
