@@ -31,4 +31,26 @@ class UserTest {
 
         session.getTransaction().commit();
     }
+
+    @Test
+    void userWithCompanyFetchProfile() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.enableFetchProfile("withCompany");
+        User user = session.find(User.class, 1);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    void userWithCompanyAndPaymentsFetchProfile() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.enableFetchProfile("withCompanyAndPayments");
+        User user = session.find(User.class, 1);
+
+        session.getTransaction().commit();
+    }
 }
