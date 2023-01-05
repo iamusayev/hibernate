@@ -12,6 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,8 +23,31 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.FetchProfile.FetchOverride;
 
-
+@NamedEntityGraph(name = "WithCompanyAndCountries", attributeNodes = {
+        @NamedAttributeNode(value = "company", subgraph = "country")
+}, subgraphs = @NamedSubgraph(name = "country", attributeNodes = @NamedAttributeNode("countries")))
+@NamedEntityGraph(name = "WithCompanyAndPaymentsAndCountries", attributeNodes = {
+        @NamedAttributeNode(value = "company", subgraph = "country"),
+        @NamedAttributeNode(value = "payments")
+}, subgraphs = @NamedSubgraph(name = "country", attributeNodes = @NamedAttributeNode("countries")))
+@NamedEntityGraph(name = "WithCompany", attributeNodes = {
+        @NamedAttributeNode(value = "company")
+})
+@NamedEntityGraph(name = "WithCompanyAndPayments", attributeNodes = {
+        @NamedAttributeNode(value = "company"),
+        @NamedAttributeNode(value = "payments")
+})
+@FetchProfile(name = "withCompany", fetchOverrides = {
+        @FetchOverride(entity = User.class, association = "company", mode = FetchMode.JOIN)
+})
+@FetchProfile(name = "withCompany", fetchOverrides = {
+        @FetchOverride(entity = User.class, association = "company", mode = FetchMode.JOIN),
+        @FetchOverride(entity = User.class, association = "payments", mode = FetchMode.JOIN)
+})
 @Data
 @EqualsAndHashCode(exclude = "company")
 @ToString(exclude = "company")
@@ -44,3 +70,4 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "receiver")
     private List<Payment> payments = new ArrayList<>();
 }
+
