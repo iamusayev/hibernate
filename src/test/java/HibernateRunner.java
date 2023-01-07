@@ -1,23 +1,18 @@
 import az.hibernate.repeat.entity.Payment;
 import az.hibernate.repeat.util.HibernateUtil;
+import az.hibernate.util.TestDataImporter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 public class HibernateRunner {
     public static void main(String[] args) {
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession();
-             Session session1 = sessionFactory.openSession()) {
+             Session session = sessionFactory.openSession();) {
             session.beginTransaction();
-            session1.beginTransaction();
-
-            Payment payment = session.find(Payment.class, 1);
-            payment.setAmount(payment.getAmount() + 10);
-            Payment anotherPayment = session1.find(Payment.class, 1);
-            anotherPayment.setAmount(anotherPayment.getAmount() + 10);
-
+            TestDataImporter.importData(sessionFactory);
+            Payment payment = new Payment(null, 100, null, null, null, null);
+            session.save(payment);
             session.getTransaction().commit();
-            session1.getTransaction().commit();
         }
     }
 }

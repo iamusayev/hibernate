@@ -1,11 +1,13 @@
 package az.hibernate.repeat.entity;
 
+ import java.time.Instant;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +39,14 @@ public class Payment {
     @ManyToOne(optional = false)
     @JoinColumn(name = "receiver_id")
     private User receiver;
+
+    private Instant createdAt;
+    private String createdBy;
+
+    @PrePersist
+    public void prePersist() {
+         setCreatedAt(Instant.now());
+        setCreatedBy("Security Context");
+    }
+
 }
