@@ -49,8 +49,8 @@ import org.hibernate.annotations.FetchProfile.FetchOverride;
         @FetchOverride(entity = User.class, association = "payments", mode = FetchMode.JOIN)
 })
 @Data
-@EqualsAndHashCode(exclude = "company")
-@ToString(exclude = "company")
+@EqualsAndHashCode(exclude = {"company", "payments"})
+@ToString(exclude = {"company", "payments"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
