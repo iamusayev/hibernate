@@ -15,6 +15,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
 
 @Data
 @EqualsAndHashCode(exclude = "receiver")
@@ -24,6 +28,8 @@ import lombok.ToString;
 @Builder
 @Entity
 @EntityListeners(value = AuditableListener.class)
+@OptimisticLocking(type = OptimisticLockType.ALL)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Payment {
 
     @Id
