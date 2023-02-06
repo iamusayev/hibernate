@@ -7,13 +7,15 @@ import az.hibernate.repeat.entity.User;
 import az.hibernate.repeat.model.Role;
 import az.hibernate.repeat.util.HibernateUtil;
 import lombok.Cleanup;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 
 class ProfileEntityTest {
 
-    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private final SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+
 
     @Test
     void persistProfileWithUser() {
@@ -30,8 +32,15 @@ class ProfileEntityTest {
                 .build());
 
         session.persist(profile);
+        session.flush();
+        session.clear();
 
-        session.getTransaction().commit();
+        Profile savedProfile = session.find(Profile.class, profile.getId());
+
+        assertThat(savedProfile.getId()).isNotNull();
+        assertThat(Hibernate.unproxy(savedProfile.getUser().getId())).isNotNull();
+
+        session.getTransaction().rollback();
     }
 
     @Test
