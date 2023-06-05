@@ -18,7 +18,6 @@ public class UserDaoCriteriaApiTest {
     private static final UserDaoCriteriaApi userDaoCriteriaApi = UserDaoCriteriaApi.getInstance();
     private static final SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
 
-
     @Test
     void findAveragePaymentAmountByFirstAndLastname() {
         Double averagePaymentAmount =

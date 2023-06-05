@@ -14,9 +14,8 @@ import org.junit.jupiter.api.Test;
 
 class ProfileEntityTest {
 
+    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private final SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-
-
     @Test
     void persistProfileWithUser() {
         @Cleanup Session session = sessionFactory.openSession();
@@ -32,6 +31,7 @@ class ProfileEntityTest {
                 .build());
 
         session.persist(profile);
+        session.getTransaction().commit();
         session.flush();
         session.clear();
 

@@ -15,7 +15,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -28,13 +27,15 @@ import org.hibernate.annotations.FetchMode;
 @Entity
 @BatchSize(size = 3)
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 
     @Builder.Default
+    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<User> users = new ArrayList<>();
 //    @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<User> users = new ArrayList<>();
