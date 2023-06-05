@@ -1,9 +1,6 @@
 package az.hibernate.repeat;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import az.hibernate.repeat.entity.Company;
 import az.hibernate.repeat.util.HibernateUtil;
 import lombok.Cleanup;
 import org.hibernate.Session;
@@ -37,7 +34,11 @@ class CompanyTest {
         Company company = session.find(Company.class, 8);
 
         assertThat(company).isNotNull();
+    void test() {
+        @Cleanup Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
+        User user = session.get(User.class, 1);
         session.getTransaction().commit();
     }
 

@@ -18,6 +18,7 @@ public class PersonalInfo implements Serializable {
 
     @Serialization
     private static final long serialVersionUID = 1L;
+public class PersonalInfo {
 
     private String firstname;
     private String lastname;

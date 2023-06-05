@@ -25,9 +25,8 @@ import org.hibernate.annotations.FetchMode;
 @NoArgsConstructor
 @Builder
 @Entity
-
+@BatchSize(size = 3)
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,6 +36,12 @@ public class Company {
     @Fetch(FetchMode.SELECT)
     @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<User> users = new ArrayList<>();
+//    @Fetch(FetchMode.SELECT)
+    @OneToMany(mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "company")
+    private List<Country> countries = new ArrayList<>();
 
     public void addUser(User user) {
         users.add(user);
