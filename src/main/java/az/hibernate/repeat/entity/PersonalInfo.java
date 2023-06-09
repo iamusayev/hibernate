@@ -1,7 +1,5 @@
 package az.hibernate.repeat.entity;
 
-import com.sun.xml.internal.ws.developer.Serialization;
-import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -14,10 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Embeddable
-public class PersonalInfo implements Serializable {
 
-    @Serialization
-    private static final long serialVersionUID = 1L;
 public class PersonalInfo {
 
     private String firstname;
