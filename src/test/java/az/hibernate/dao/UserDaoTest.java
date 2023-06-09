@@ -1,5 +1,4 @@
-//package az.hibernate.dao;
-//
+
 //import az.hibernate.repeat.dao.UserDao;
 //import az.hibernate.repeat.util.HibernateUtil;
 //import az.hibernate.util.TestDataImporter;
@@ -45,4 +44,3 @@
 //        session.close();
 //    }
 //
-//}

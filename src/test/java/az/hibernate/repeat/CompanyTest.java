@@ -1,7 +1,6 @@
 package az.hibernate.repeat;
 
 
-import az.hibernate.repeat.entity.User;
 import az.hibernate.repeat.util.HibernateUtil;
 import lombok.Cleanup;
 import org.hibernate.Session;
@@ -20,6 +19,8 @@ class CompanyTest {
         User user = session.get(User.class, 1);
 
 
+
+        User user = session.get(User.class, 1);
         session.getTransaction().commit();
     }
 

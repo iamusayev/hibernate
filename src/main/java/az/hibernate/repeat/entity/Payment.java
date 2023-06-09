@@ -10,10 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
+@EntityListeners(value = AuditableListener.class)
+@OptimisticLocking(type = OptimisticLockType.ALL)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Payment {
 
     @Id
@@ -97,4 +101,18 @@ public class Payment {
     public String toString() {
         return "Payment(id=" + this.getId() + ", amount=" + this.getAmount() + ", receiver=" + this.getReceiver() + ")";
     }
+}
+
+    private Integer amount;
+
+    @Version
+    private Long version;
+
+    @ManyToOne(optional = false)
+    private User receiver;
+
+    private Instant createdAt;
+    private String createdBy;
+    private Instant updatedAt;
+    private String updatedBy;
 }
